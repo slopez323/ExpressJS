@@ -18,9 +18,20 @@ router.get('/all', function (req, res, next) {
     };
 });
 
-router.get('/:blogId', function (req, res, next) {
+router.get('/singleBlog/:blogId', function (req, res, next) {
     const blogId = req.params.blogId;
     res.json(blogPosts.find(post => post.id == blogId));
+});
+
+router.get('/postBlog', function (req, res, next) {
+    res.render('postBlog');
+});
+
+router.post('/submit', function (req, res, next) {
+    let newPost = req.body;
+    blogPosts.push({createdAt: new Date(), title: newPost.title, text: newPost.text, author: newPost.author, id: (blogPosts.length + 1).toString()});
+
+    res.send('OK');
 });
 
 module.exports = router;
