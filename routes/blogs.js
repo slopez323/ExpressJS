@@ -29,7 +29,8 @@ router.get('/postBlog', function (req, res, next) {
 
 router.post('/submit', function (req, res, next) {
     let newPost = req.body;
-    blogPosts.push({createdAt: new Date(), title: newPost.title, text: newPost.text, author: newPost.author, id: (blogPosts.length + 1).toString()});
+    blogPosts.push({createdAt: new Date().toISOString(), title: newPost.title, text: newPost.text, author: newPost.author, id: (blogPosts.length + 1).toString()});
+    console.log(blogPosts)
 
     res.send('OK');
 });
