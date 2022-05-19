@@ -19,17 +19,21 @@ router.get('/all', function (req, res, next) {
     };
 });
 
-router.get('/singleBlog/:blogId', function (req, res, next) {
+router.get('/single-blog/:blogId', function (req, res, next) {
     const blogId = req.params.blogId;
     res.json(blogPosts.find(post => post.id == blogId));
 });
 
-router.get('/postBlog', function (req, res, next) {
+router.get('/post-blog', function (req, res, next) {
     res.render('postBlog');
 });
 
-router.get('/displayBlogs', function (req, res, next) {
+router.get('/display-blogs', function (req, res, next) {
     res.render('displayBlogs');
+});
+
+router.get('/display-single-blog', function (req, res, next) {
+    res.render('displaySingleBlog');
 });
 
 router.post('/submit', function (req, res, next) {
@@ -37,6 +41,14 @@ router.post('/submit', function (req, res, next) {
     blogPosts.push({createdAt: new Date().toISOString(), title: newPost.title, text: newPost.text, author: newPost.author, id: (blogPosts.length + 1).toString()});
     console.log(blogPosts)
 
+    res.send('OK');
+});
+
+router.delete('/delete-blog/:blogId', function (req, res, next) {
+    const blogId = req.params.blogId;
+    const index = blogPosts.findIndex(post => post.id == blogId);
+    blogPosts.splice(index, 1);
+    
     res.send('OK');
 });
 
