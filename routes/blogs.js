@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var blogs = require('../public/sampleBlogs');
 var blogPosts = blogs.blogPosts;
+let blogCount = blogPosts.length;
 
 router.get('/all', function (req, res, next) {
     let sort = req.query.sort;
@@ -38,8 +39,8 @@ router.get('/display-single-blog', function (req, res, next) {
 
 router.post('/submit', function (req, res, next) {
     let newPost = req.body;
-    blogPosts.push({createdAt: new Date().toISOString(), title: newPost.title, text: newPost.text, author: newPost.author, id: (blogPosts.length + 1).toString()});
-    console.log(blogPosts)
+    blogPosts.push({createdAt: new Date().toISOString(), title: newPost.title, text: newPost.text, author: newPost.author, id: (blogCount + 1).toString()});
+    blogCount++;
 
     res.send('OK');
 });
@@ -48,6 +49,18 @@ router.delete('/delete-blog/:blogId', function (req, res, next) {
     const blogId = req.params.blogId;
     const index = blogPosts.findIndex(post => post.id == blogId);
     blogPosts.splice(index, 1);
+    
+    res.send('OK');
+});
+
+router.put('/modify-blog/:blogId', function (req, res, next) {
+    const blogId = req.params.blogId;
+    const index = blogPosts.findIndex(post => post.id == blogId);
+    let modification = req.body;
+
+    blogPosts[index].title = modification.title;
+    blogPosts[index].author = modification.author;
+    blogPosts[index].text = modification.text;
     
     res.send('OK');
 });

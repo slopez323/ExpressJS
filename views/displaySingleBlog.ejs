@@ -1,42 +1,65 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-      $(document).ready(function () {
-        var blogId;
-        $("#getSingleBlog").click(function () {
-          blogId = $("#blogId").val();
-          $.get(
-            "http://localhost:4000/blogs/single-blog/" + blogId,
-            function (blog) {
-                $("#blogTitle").html(blog.title)
-                $("#blogAuthor").html(blog.author)
-                $("#blogText").html(blog.text)
-            }
-          );
+        $(document).ready(function () {
+            var blogId;
+            $("#getSingleBlog").click(function () {
+                blogId = $("#blogId").val();
+                $.get(
+                    "http://localhost:4000/blogs/single-blog/" + blogId,
+                    function (blog) {
+                        $("#blogTitle").val(blog.title)
+                        $("#blogAuthor").val(blog.author)
+                        $("#blogText").val(blog.text)
+                    }
+                );
+                $('.modify').show();
+            });
+            $("#deleteSingleBlog").click(function () {
+                blogId = $("#blogId").val();
+                $.ajax({
+                    url: `http://localhost:4000/blogs/delete-blog/${blogId}`,
+                    type: 'DELETE'
+                });
+            });
+            $("#modifyButton").click(function () {
+                blogId = $("#blogId").val();
+                let title = $('#blogTitle').val();
+                let author = $('#blogAuthor').val();
+                let text = $('#blogText').val();
+                console.log(title, author, text)
+                $.ajax({
+                    url: `http://localhost:4000/blogs/modify-blog/${blogId}`,
+                    type: 'PUT',
+                    data: {title, author, text}
+                });
+            });
         });
-        $("#deleteSingleBlog").click(function () {
-            blogId = $("#blogId").val();
-            $.ajax({
-                url: `http://localhost:4000/blogs/delete-blog/${blogId}`,
-                type: 'DELETE'});
-        })  
-      });
     </script>
-  </head>
-  <body>
+</head>
+
+<body>
     <h1>Single Blog</h1>
     <span>
-      <label>Blog ID</label>
-      <input id="blogId" type="text" />
+        <label>Blog ID</label>
+        <input id="blogId" type="text" />
     </span>
     <button id="getSingleBlog">Get Single Blog</button>
     <button id="deleteSingleBlog">Delete Single Blog</button>
-    <div>
-        <p id="blogTitle"></p>
-        <p id="blogAuthor"></p>
-        <p id="blogText"></p>
+
+    <div class="modify" style="display: none">
+        <div contenteditable="true">
+            Title <textarea id="blogTitle"></textarea><br>
+            Author <textarea id="blogAuthor"></textarea><br>
+            Text <textarea id="blogText" style="width: 500px; height: 200px"></textarea>
+        </div>
+        <p style="color: red">Click on text above to make changes</p>
+        <button id="modifyButton">Submit modifications</button>
     </div>
-  </body>
+
+</body>
+
 </html>
