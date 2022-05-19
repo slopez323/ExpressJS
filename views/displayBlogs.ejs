@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var blogs = [];
+            $("#getBlogs").click(function () {
+                $("#blogList").empty();
+
+                const sortOption = $('#sort').val();
+                if (sortOption == 'asc') {
+                    $.get("http://localhost:4000/blogs/all?sort=asc", function (blogs) {
+                        blogs.forEach((blog) => {
+                            $("#blogList").append(`<li>
+                <p> Title: ${blog.title} </p>
+                <p> Text: ${blog.text} </p>
+                <p> Author: ${blog.author} </p>
+                <p> Date: ${new Date(blog.createdAt).toString()} </p>
+                </li>`);
+                        });
+                    });
+                } else if (sortOption == 'desc') {
+                    $.get("http://localhost:4000/blogs/all?sort=desc", function (blogs) {
+                        blogs.forEach((blog) => {
+                            $("#blogList").append(`<li>
+                <p> Title: ${blog.title} </p>
+                <p> Text: ${blog.text} </p>
+                <p> Author: ${blog.author} </p>
+                <p> Date: ${new Date(blog.createdAt).toString()} </p>
+                </li>`);
+                        });
+                    });
+                } else {
+                    $.get("http://localhost:4000/blogs/all", function (blogs) {
+                        blogs.forEach((blog) => {
+                            $("#blogList").append(`<li>
+                <p> Title: ${blog.title} </p>
+                <p> Text: ${blog.text} </p>
+                <p> Author: ${blog.author} </p>
+                <p> Date: ${new Date(blog.createdAt).toString()} </p>
+                </li>`);
+                        });
+                    });
+                };
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Display Blogs</h1>
+    <label for="sort">Sort order:</label>
+    <select name="sort" id="sort">
+        <option value="default">Default</option>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+
+    <button id="getBlogs">Get Blogs</button>
+    <ul id="blogList"></ul>
+</body>
+
+</html>

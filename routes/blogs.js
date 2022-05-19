@@ -14,7 +14,8 @@ router.get('/all', function (req, res, next) {
         sorted = blogPosts.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         res.json(sorted);
     } else {
-        res.json(blogPosts);
+        sorted = blogPosts.sort((a, b) => a.id - b.id);
+        res.json(sorted);
     };
 });
 
@@ -25,6 +26,10 @@ router.get('/singleBlog/:blogId', function (req, res, next) {
 
 router.get('/postBlog', function (req, res, next) {
     res.render('postBlog');
+});
+
+router.get('/displayBlogs', function (req, res, next) {
+    res.render('displayBlogs');
 });
 
 router.post('/submit', function (req, res, next) {
