@@ -70,9 +70,10 @@ router.post('/submit', async function (req, res, next) {
     try {
         const newPost = req.body;
         const collection = await blogsDB().collection('posts');
+        const latestPost = await collection.find({}).sort({id: -1}).limit(1).toArray();
+        const blogID = latestPost[0].id + 1;
 
         const today = new Date().toISOString();
-        const blogID = await collection.count() + 1;
 
         collection.insertOne({
             'createdAt': today,
