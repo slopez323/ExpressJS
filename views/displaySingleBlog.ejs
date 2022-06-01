@@ -11,9 +11,9 @@
                 $.get(
                     "http://localhost:4000/blogs/single-blog/" + blogId,
                     function (blog) {
-                        $("#blogTitle").val(blog.title)
-                        $("#blogAuthor").val(blog.author)
-                        $("#blogText").val(blog.text)
+                        $("#blogTitle").val(blog[0].title)
+                        $("#blogAuthor").val(blog[0].author)
+                        $("#blogText").val(blog[0].text)
                     }
                 );
                 $('.modify').show();
