@@ -66,11 +66,36 @@ router.get('/display-single-blog', function (req, res, next) {
     res.render('displaySingleBlog');
 });
 
+router.get('/authors', function (req, res, next) {
+    res.render('authors');
+});
+
+router.get('/authors/list', async function (req, res, next) {
+    try {
+        const collection = await blogsDB().collection('posts').find({}).toArray();
+        const authors = [...new Set(collection.map(post => post.author))];
+        res.json(authors);
+    } catch (e) {
+        res.status(500).send('Error.');
+    };
+});
+
+router.get('/authors/:name', async function (req, res, next) {
+    try {
+        const name = req.params.name;
+        const author = name.split('%20').join(' ');
+        const posts = await blogsDB().collection('posts').find({author: author}).toArray();
+        res.json(posts);
+    } catch (e) {
+        res.status(500).send('Error.');
+    };
+});
+
 router.post('/submit', async function (req, res, next) {
     try {
         const newPost = req.body;
         const collection = await blogsDB().collection('posts');
-        const latestPost = await collection.find({}).sort({id: -1}).limit(1).toArray();
+        const latestPost = await collection.find({}).sort({ id: -1 }).limit(1).toArray();
         const blogID = latestPost[0].id + 1;
 
         const today = new Date().toISOString();
@@ -122,12 +147,14 @@ router.put('/modify-blog/:blogId', async function (req, res, next) {
         // blogPosts[index].author = modification.author;
         // blogPosts[index].text = modification.text;
 
-        collection.updateOne({id: blogId}, { $set: { 
-            title: modification.title,
-            author: modification.author,
-            text: modification.text,
-            lastModified: today
-         } })
+        collection.updateOne({ id: blogId }, {
+            $set: {
+                title: modification.title,
+                author: modification.author,
+                text: modification.text,
+                lastModified: today
+            }
+        })
 
 
         res.send('Modified');

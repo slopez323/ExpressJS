@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.get("http://localhost:4000/blogs/authors/list", function (authors) {
+                authors.forEach((author) => {
+                    $("#authorList").append(`<option value="${author}">${author}</option>`);
+                });
+            });
+            $("#getBlogs").click(function () {
+                $("#blogList").empty();
+                const name = $('#authorList').val().split(' ').join('%20');
+                $.get("http://localhost:4000/blogs/authors/" + name, function (posts) {
+                    posts.forEach(post => {
+                        $("#blogList").append(`<li>
+            <p> Title: ${post.title} </p>
+            <p> Text: ${post.text} </p>
+            <p> Author: ${post.author} </p>
+            <p> Date: ${new Date(post.createdAt).toString()} </p>
+            </li>`)
+                    })
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Display Blogs By Author</h1>
+    <div class="author-select">
+        <label for="author">Author:</label>
+        <select name="author" id="authorList">
+
+        </select>
+
+        <button id="getBlogs">Get Author's Blogs</button>
+        <ul id="blogList"></ul>
+    </div>
+</body>
+
+</html>
